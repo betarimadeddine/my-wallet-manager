@@ -16,6 +16,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # Copy only the necessary composer files (composer.json, composer.lock)
 COPY composer.* .
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install dependencies
 RUN composer install --ignore-platform-reqs --no-interaction --no-scripts
 

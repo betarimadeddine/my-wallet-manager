@@ -1,7 +1,7 @@
 up:
-	docker-compose -f docker/docker-compose.yml -p="test" up -d
+	docker-compose -f docker/docker-compose.yml -p="my_wallet" up -d
 down:
-	docker-compose -f docker/docker-compose.yml -p="test" down
+	docker-compose -f docker/docker-compose.yml -p="my_wallet" down
 clean:
 	docker-compose -f docker/docker-compose.yml stop && docker-compose -f docker/docker-compose.yml rm -f -v && docker system prune -f --volumes 
 build:
