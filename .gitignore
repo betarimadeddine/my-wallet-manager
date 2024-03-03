@@ -1,7 +1,7 @@
-./docker/mysql-data/*
-./docker/redis-data/*
-./docker/mysql-data
-./docker/redis-data
+docker/mysql-data/*
+docker/redis-data/*
+docker/mysql-data
+docker/redis-data
 .src/.phpunit.cache
 .src/node_modules
 .src/public/build
