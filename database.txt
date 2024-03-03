@@ -1,0 +1,49 @@
+Wallet App
+
+tmp_users:
+    - id
+    - phone
+    - OTP
+
+users:
+    - id
+    - name
+    - wallet_id
+
+wallets:
+    - id 
+    - current_balance
+    - total_balance
+
+cards:
+    - id
+    - wallet_id
+    - number
+    - current_balance
+    - total_balance
+    - is_default
+    - is_open => will open in due date or balance
+    - balance_to_open
+    - date_to_open 
+    - is_active
+
+transactions:
+    - id
+    - card_id
+    - wallet_id_sender
+    - wallet_id_receiver
+    - type : Send / Receive / Pay / Refill
+    - amount
+
+wallet_history: => 1 transaction = 2 balances
+    - id
+    - wallet_id
+    - transaction_id
+    - amount
+    - before
+    - after
+    - operation => Increase / Decrease
+
+
+
+Settings
