@@ -1,0 +1,105 @@
+class category
+{
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'foreign_key', 'local_key');
+        // foreign_key -> category_id
+        // local_key -> id
+    }
+}
+
+class product
+{
+    public function category()
+    {
+        return $this->belongTo(Category::class, 'foreign_key', 'owner_key')->withDefault(['name' => 'Main Value']);
+        // foreign_key -> category_id
+        // owner_key -> id
+        // we use withDefault if we don't have relation like parents child
+    }
+}
+
+|------------|          |-------------|
+| categories |          |   products  |
+|------------|          |-------------|
+|    id      |          |     id      |
+|------------|          | category_id |
+|------------|          |-------------|
+
+without eager loading
+$products = Product::paginate();
+
+with eager loading
+$products = Product::with(['category'])->paginate();
+
+----
+
+$category = Category::where('id', 10)->get();
+$productsByCategory = $category->products;
+
+// We can get the relation between category and products with () and add more condition query
+$productsByCategory = $category->products()->where('color', 'red')->latest()->get();
+
+
+$category->products   // => Collection
+$category->products() // => Elequent Builder
+
+
+
+@1
+$category = Category::where('status', 'Active')
+->withCount('products as nbr_products') // by defaul return products_count
+->get();
+
+@2
+$category = Category::where('status', 'Active')
+->select('categories.*')
+->selectRaw('(SELECT COUNT(*) FROM products p where p.category_id = categories.id) as nbr_products')
+->get();
+
+
+If we use select('') => we tell to laravel give us specific columns don't use the defauls select all
+But if we want use query in columns we use selectRaw('Query as column_name')
+
+Wait ..
+
+We can use Select as SelectRow like (with DB Facade):
+
+@1
+->select(DB::raw('(SELECT COUNT(*) FROM products p where p.category_id = categories.id) as nbr_products'))
+
+@2
+->selectRaw('(SELECT COUNT(*) FROM products p where p.category_id = categories.id) as nbr_products')
+
+
+we can only use this:
+->select('')
+
+or only thie:
+->select([
+    '',
+    ''
+])
+
+with this:
+->addSelect('')
+
+
+
+
+
+we can add where to withCount like:
+
+$category = Category::where('status', 'Active')
+->withCount([
+        'products as nbr_products' => function($query){
+            $query->where('color', 'red')
+        }
+])
+->get();
+
+Before:
+    (SELECT COUNT(*) FROM products p where p.category_id = categories.id) as nbr_products
+
+After:
+(SELECT COUNT(*) FROM products p where p.category_id = categories.id) as nbr_products and p.color = 'red'
